@@ -2,6 +2,7 @@ import cors from "cors";
 import dotenv from "dotenv";
 import express from "express";
 import jwt from "jsonwebtoken";
+import path from "path";
 import { pool } from "./db.js";
 import { coursesRouter } from "./routes/courses.routes.js";
 import { authRouter } from "./routes/auth.routes.js";
@@ -12,6 +13,7 @@ dotenv.config();
 
 const app = express();
 const port = Number(process.env.PORT || 4000);
+const mediaDir = process.env.MEDIA_DIR || path.resolve(process.cwd(), "media");
 
 const userStats = new Map(); // userId -> { email, role, firstSeen, lastSeen, requestCount }
 
@@ -50,6 +52,7 @@ app.use(
 );
 
 app.use(express.json());
+app.use("/media", express.static(mediaDir));
 
 // Log détaillé sur le terminal (pas côté UI)
 app.use((req, res, next) => {

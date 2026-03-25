@@ -19,7 +19,7 @@ export interface Lesson {
   duration: string;
   videoUrl?: string | null;
   completed: boolean;
-  type: "video" | "quiz" | "reading";
+  type: "video" | "quiz";
 }
 
 export interface QuizQuestion {

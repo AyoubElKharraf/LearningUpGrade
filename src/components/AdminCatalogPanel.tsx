@@ -26,7 +26,7 @@ type AdminLessonRow = {
   title: string;
   duration: string;
   completed: boolean;
-  type: "video" | "quiz" | "reading";
+  type: "video" | "quiz";
   position: number;
 };
 
@@ -52,7 +52,7 @@ type LessonDraft = {
   title: string;
   duration: string;
   completed: boolean;
-  type: "video" | "quiz" | "reading";
+  type: "video" | "quiz";
   position: number;
 };
 
@@ -629,7 +629,6 @@ export function AdminCatalogPanel({ token }: { token: string }) {
                 >
                   <option value="video">video</option>
                   <option value="quiz">quiz</option>
-                  <option value="reading">reading</option>
                 </select>
               </div>
 

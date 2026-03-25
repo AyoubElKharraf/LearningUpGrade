@@ -116,6 +116,7 @@ DB_PASSWORD=YOUR_PASSWORD
 DB_NAME=learnspark
 JWT_SECRET=change_this_secret
 JWT_EXPIRES_IN=7d
+MEDIA_DIR=./media
 ```
 
 ### Etape E - Creer la base et les tables
@@ -216,6 +217,7 @@ Le role est determine automatiquement:
 - `DELETE /api/admin/courses/:courseId`
 - `GET /api/admin/courses/:courseId/lessons`
 - `POST /api/admin/courses/:courseId/lessons`
+- `POST /api/admin/uploads/video`
 - `GET /api/admin/lessons/:lessonId`
 - `PUT /api/admin/lessons/:lessonId`
 - `DELETE /api/admin/lessons/:lessonId`

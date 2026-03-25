@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { type AuthUser, getAuthToken, getAuthUser } from "@/lib/auth";
 
-type LessonType = "video" | "quiz" | "reading";
+type LessonType = "video" | "quiz";
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:4000/api";
 
@@ -32,6 +32,7 @@ const AdminLessonEditPage = () => {
 
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [uploading, setUploading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   const [courses, setCourses] = useState<{ id: string; title: string }[]>([]);
@@ -137,6 +138,34 @@ const AdminLessonEditPage = () => {
     }
   }
 
+  const uploadVideoFile = async (file: File) => {
+    if (!token) return;
+    setUploading(true);
+    setError(null);
+    try {
+      const formData = new FormData();
+      formData.append("video", file);
+
+      const res = await fetch(`${API_BASE_URL}/admin/uploads/video`, {
+        method: "POST",
+        headers: { Authorization: `Bearer ${token}` },
+        body: formData,
+      });
+      if (!res.ok) {
+        const text = await res.text().catch(() => "");
+        throw new Error(text || `Upload failed: ${res.status}`);
+      }
+      const data = (await res.json()) as { file: { url: string } };
+      const publicBase = API_BASE_URL.replace(/\/api\/?$/, "");
+      const finalUrl = data.file.url.startsWith("http") ? data.file.url : `${publicBase}${data.file.url}`;
+      setForm((d) => ({ ...d, video_url: finalUrl }));
+    } catch (e) {
+      setError(e instanceof Error ? e.message : "Erreur upload video");
+    } finally {
+      setUploading(false);
+    }
+  };
+
   if (!token || !user || (user as AuthUser).role !== "admin") {
     return (
       <div className="min-h-screen bg-background">
@@ -206,6 +235,19 @@ const AdminLessonEditPage = () => {
                   className="mt-2"
                   placeholder="ex: /videos/lesson1.mp4 ou https://..."
                 />
+                <div className="mt-2">
+                  <Input
+                    type="file"
+                    accept="video/*"
+                    onChange={(e) => {
+                      const file = e.target.files?.[0];
+                      if (file) uploadVideoFile(file).catch(() => {});
+                      e.currentTarget.value = "";
+                    }}
+                    disabled={uploading}
+                  />
+                  <p className="mt-1 text-xs text-muted-foreground">{uploading ? "Upload en cours..." : "Tu peux charger une video depuis ton PC."}</p>
+                </div>
               </div>
 
               <div>
@@ -227,7 +269,6 @@ const AdminLessonEditPage = () => {
                 >
                   <option value="video">video</option>
                   <option value="quiz">quiz</option>
-                  <option value="reading">reading</option>
                 </select>
               </div>
 

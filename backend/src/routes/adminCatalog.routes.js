@@ -1,4 +1,8 @@
 import { Router } from "express";
+import fs from "fs";
+import path from "path";
+import crypto from "crypto";
+import multer from "multer";
 import {
   listCourses,
   createCourse,
@@ -14,6 +18,29 @@ import {
 import { requireAdmin } from "../utils/adminAuth.js";
 
 const adminCatalogRouter = Router();
+const mediaDir = process.env.MEDIA_DIR || path.resolve(process.cwd(), "media");
+const videosDir = path.join(mediaDir, "videos");
+
+const storage = multer.diskStorage({
+  destination: (_req, _file, cb) => {
+    fs.mkdirSync(videosDir, { recursive: true });
+    cb(null, videosDir);
+  },
+  filename: (_req, file, cb) => {
+    const ext = path.extname(file.originalname || "").toLowerCase();
+    const safeExt = ext && ext.length <= 8 ? ext : ".mp4";
+    cb(null, `${Date.now()}-${crypto.randomUUID()}${safeExt}`);
+  },
+});
+
+const uploadVideo = multer({
+  storage,
+  limits: { fileSize: 1024 * 1024 * 300 }, // 300 MB
+  fileFilter: (_req, file, cb) => {
+    if ((file.mimetype || "").startsWith("video/")) return cb(null, true);
+    cb(new Error("Only video files are allowed"));
+  },
+});
 
 adminCatalogRouter.get("/courses", requireAdmin, async (_req, res, next) => {
   try {
@@ -102,6 +129,16 @@ adminCatalogRouter.get("/lessons/:lessonId", requireAdmin, async (req, res, next
     const lesson = await getLessonById(req.params.lessonId);
     if (!lesson) return res.status(404).json({ message: "Lesson not found" });
     res.json({ lesson });
+  } catch (error) {
+    next(error);
+  }
+});
+
+adminCatalogRouter.post("/uploads/video", requireAdmin, uploadVideo.single("video"), async (req, res, next) => {
+  try {
+    if (!req.file) return res.status(400).json({ message: "Missing video file" });
+    const url = `/media/videos/${req.file.filename}`;
+    res.status(201).json({ file: { url, filename: req.file.filename, size: req.file.size, mimeType: req.file.mimetype } });
   } catch (error) {
     next(error);
   }
