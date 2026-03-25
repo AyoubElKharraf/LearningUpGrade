@@ -99,7 +99,7 @@ export async function deleteCourse(courseId) {
 
 export async function listLessonsByCourseId(courseId) {
   const [rows] = await pool.query(
-    `SELECT id, title, duration, completed, type, position
+    `SELECT id, title, duration, video_url AS videoUrl, completed, type, position
      FROM lessons
      WHERE course_id = ?
      ORDER BY position`,
@@ -112,19 +112,19 @@ export async function listLessonsByCourseId(courseId) {
 }
 
 export async function createLesson({ courseId, lesson }) {
-  const { id, title, duration, completed, type, position } = lesson || {};
+  const { id, title, duration, video_url, completed, type, position } = lesson || {};
 
   await pool.query(
-    `INSERT INTO lessons (id, course_id, title, duration, completed, type, position)
-     VALUES (?, ?, ?, ?, ?, ?, ?)`,
-    [id, courseId, title, duration, toBoolean(completed) ? 1 : 0, type, position],
+    `INSERT INTO lessons (id, course_id, title, duration, video_url, completed, type, position)
+     VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
+    [id, courseId, title, duration, video_url || null, toBoolean(completed) ? 1 : 0, type, position],
   );
   await syncLessonsCount(courseId);
   return { id };
 }
 
 export async function updateLesson(lessonId, lesson) {
-  const { title, duration, completed, type, position, course_id } = lesson || {};
+  const { title, duration, video_url, completed, type, position, course_id } = lesson || {};
 
   // Keep old course_id so we can re-sync lesson counts correctly.
   const [oldRows] = await pool.query("SELECT course_id FROM lessons WHERE id = ? LIMIT 1", [lessonId]);
@@ -133,9 +133,9 @@ export async function updateLesson(lessonId, lesson) {
 
   await pool.query(
     `UPDATE lessons
-     SET course_id = ?, title = ?, duration = ?, completed = ?, type = ?, position = ?
+     SET course_id = ?, title = ?, duration = ?, video_url = ?, completed = ?, type = ?, position = ?
      WHERE id = ?`,
-    [newCourseId, title, duration, toBoolean(completed) ? 1 : 0, type, position, lessonId],
+    [newCourseId, title, duration, video_url || null, toBoolean(completed) ? 1 : 0, type, position, lessonId],
   );
 
   if (oldCourseId) await syncLessonsCount(oldCourseId);
@@ -146,7 +146,7 @@ export async function updateLesson(lessonId, lesson) {
 
 export async function getLessonById(lessonId) {
   const [rows] = await pool.query(
-    `SELECT id, course_id AS courseId, title, duration, completed, type, position
+    `SELECT id, course_id AS courseId, title, duration, video_url AS videoUrl, completed, type, position
      FROM lessons
      WHERE id = ?
      LIMIT 1`,

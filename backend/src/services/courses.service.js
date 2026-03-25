@@ -4,6 +4,7 @@ const toLesson = (row) => ({
   id: row.id,
   title: row.title,
   duration: row.duration,
+  videoUrl: row.video_url ?? null,
   completed: Boolean(row.completed),
   type: row.type,
 });
@@ -30,7 +31,7 @@ export async function getCourseById(courseId) {
   }
 
   const [lessonRows] = await pool.query(
-    `SELECT id, title, duration, completed, type
+    `SELECT id, title, duration, video_url, completed, type
      FROM lessons
      WHERE course_id = ?
      ORDER BY position`,
@@ -42,7 +43,7 @@ export async function getCourseById(courseId) {
 
 export async function getLessonById(courseId, lessonId) {
   const [rows] = await pool.query(
-    `SELECT l.id, l.title, l.duration, l.completed, l.type
+    `SELECT l.id, l.title, l.duration, l.video_url, l.completed, l.type
      FROM lessons l
      WHERE l.course_id = ? AND l.id = ?`,
     [courseId, lessonId]

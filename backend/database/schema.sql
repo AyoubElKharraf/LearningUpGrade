@@ -20,6 +20,7 @@ CREATE TABLE IF NOT EXISTS lessons (
   course_id VARCHAR(80) NOT NULL,
   title VARCHAR(255) NOT NULL,
   duration VARCHAR(50) NOT NULL,
+  video_url VARCHAR(1024) NULL,
   completed TINYINT(1) NOT NULL DEFAULT 0,
   type ENUM('video','quiz','reading') NOT NULL,
   position INT NOT NULL,

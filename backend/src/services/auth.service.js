@@ -2,7 +2,9 @@ import bcrypt from "bcryptjs";
 import crypto from "crypto";
 import { pool } from "../db.js";
 
-const ADMIN_EMAIL = "ayoub.ek@gmail.com";
+const ADMIN_EMAIL = String(process.env.ADMIN_EMAIL || "admin@learningupgrade.local")
+  .trim()
+  .toLowerCase();
 
 function normalizeEmail(email) {
   return String(email || "").trim().toLowerCase();

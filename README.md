@@ -165,7 +165,7 @@ Ouvrir:
 
 Le role est determine automatiquement:
 
-- `ayoub.ek@gmail.com` => `admin`
+- `ADMIN_EMAIL` (dans `backend/.env`) => `admin`
 - tous les autres emails => `client`
 
 > Les utilisateurs sont persistes en MySQL (pas en memoire volatile).

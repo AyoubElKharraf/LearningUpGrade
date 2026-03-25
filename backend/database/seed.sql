@@ -64,15 +64,15 @@ INSERT INTO quiz_questions (id, question, options_json, correct_answer, explanat
 
 -- Users (auth persistence) - do NOT delete
 -- Passwords (prototype):
---  - ayoub.ek@gmail.com => 12345 (admin)
---  - samir.ouh@gmail.com => client123
---  - atmane.mzn@gmail.com => pass1234
---  - amine.gnn@gmail.com => client456
+--  - admin@learningupgrade.local => 12345 (admin)
+--  - client1@learningupgrade.local => client123
+--  - client2@learningupgrade.local => pass1234
+--  - client3@learningupgrade.local => client456
 INSERT INTO users (id, email, password_hash, role, name) VALUES
-  (UUID(), 'ayoub.ek@gmail.com', '$2a$10$ceULndIOSKipuNo.8sfrfe9Q9ES0r0YFU.V58tyWyoIzA9s.R6SMm', 'admin', 'Admin'),
-  (UUID(), 'samir.ouh@gmail.com', '$2a$10$t6AwTa3iyRMJyIVQQTdkEuq/eOlZLojLd4LE0XjTPdfR9dK855NuK', 'client', 'Client'),
-  (UUID(), 'atmane.mzn@gmail.com', '$2a$10$lVpO2GsLqzIE0uYWTv/FfOK7VcxZLO60vQLxlm9Bl6zRCJxejRc/a', 'client', 'Client'),
-  (UUID(), 'amine.gnn@gmail.com', '$2a$10$dGw4Tqx8waIKbAl7JmlcEuxQ8u6dXtmATeJfPofCEB1CRZiV7Iduq', 'client', 'Client')
+  (UUID(), 'admin@learningupgrade.local', '$2a$10$ceULndIOSKipuNo.8sfrfe9Q9ES0r0YFU.V58tyWyoIzA9s.R6SMm', 'admin', 'Admin'),
+  (UUID(), 'client1@learningupgrade.local', '$2a$10$t6AwTa3iyRMJyIVQQTdkEuq/eOlZLojLd4LE0XjTPdfR9dK855NuK', 'client', 'Client'),
+  (UUID(), 'client2@learningupgrade.local', '$2a$10$lVpO2GsLqzIE0uYWTv/FfOK7VcxZLO60vQLxlm9Bl6zRCJxejRc/a', 'client', 'Client'),
+  (UUID(), 'client3@learningupgrade.local', '$2a$10$dGw4Tqx8waIKbAl7JmlcEuxQ8u6dXtmATeJfPofCEB1CRZiV7Iduq', 'client', 'Client')
 ON DUPLICATE KEY UPDATE
   password_hash = VALUES(password_hash),
   role = VALUES(role),

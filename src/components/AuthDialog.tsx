@@ -33,7 +33,7 @@ export function AuthDialog({
     () =>
       mode === "login"
         ? "Connecte-toi pour accéder à ton compte."
-        : "Crée un compte (prototype local : admin si email `ayoub.ek@gmail.com`, sinon client).",
+        : "Crée un compte (le rôle admin est défini côté serveur via la variable ADMIN_EMAIL).",
     [mode],
   );
 

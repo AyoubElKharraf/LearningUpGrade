@@ -3,12 +3,23 @@ import { useState } from "react";
 
 interface VideoPlayerProps {
   title: string;
+  videoUrl?: string | null;
   thumbnailUrl?: string;
 }
 
-export const VideoPlayer = ({ title, thumbnailUrl }: VideoPlayerProps) => {
+export const VideoPlayer = ({ title, videoUrl, thumbnailUrl }: VideoPlayerProps) => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [progress, setProgress] = useState(32);
+
+  if (videoUrl) {
+    return (
+      <div className="overflow-hidden rounded-xl bg-black aspect-video">
+        <video className="h-full w-full" src={videoUrl} controls preload="metadata">
+          Your browser does not support the video tag.
+        </video>
+      </div>
+    );
+  }
 
   return (
     <div className="relative overflow-hidden rounded-xl bg-foreground aspect-video">

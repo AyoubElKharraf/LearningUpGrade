@@ -16,6 +16,7 @@ type LessonDetails = {
   courseId: string;
   title: string;
   duration: string;
+  videoUrl?: string | null;
   completed: boolean | number;
   type: string;
   position: number;
@@ -40,6 +41,7 @@ const AdminLessonEditPage = () => {
     course_id: string;
     title: string;
     duration: string;
+    video_url: string;
     completed: boolean;
     type: LessonType;
     position: number;
@@ -48,6 +50,7 @@ const AdminLessonEditPage = () => {
     course_id: "",
     title: "",
     duration: "",
+    video_url: "",
     completed: false,
     type: "video",
     position: 1,
@@ -84,6 +87,7 @@ const AdminLessonEditPage = () => {
           course_id: l.courseId,
           title: l.title || "",
           duration: l.duration || "",
+          video_url: l.videoUrl || "",
           completed: Boolean(l.completed),
           type: (l.type as LessonType) || "video",
           position: Number(l.position || 1),
@@ -110,6 +114,7 @@ const AdminLessonEditPage = () => {
         course_id: form.course_id,
         title: form.title.trim(),
         duration: form.duration.trim(),
+        video_url: form.video_url.trim(),
         completed: Boolean(form.completed),
         type: form.type,
         position: Number(form.position || 0),
@@ -191,6 +196,16 @@ const AdminLessonEditPage = () => {
               <div>
                 <label className="text-sm font-semibold">Durée</label>
                 <Input value={form.duration} onChange={(e) => setForm((d) => ({ ...d, duration: e.target.value }))} className="mt-2" />
+              </div>
+
+              <div>
+                <label className="text-sm font-semibold">Video URL / Path</label>
+                <Input
+                  value={form.video_url}
+                  onChange={(e) => setForm((d) => ({ ...d, video_url: e.target.value }))}
+                  className="mt-2"
+                  placeholder="ex: /videos/lesson1.mp4 ou https://..."
+                />
               </div>
 
               <div>

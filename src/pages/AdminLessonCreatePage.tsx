@@ -13,6 +13,7 @@ type LessonPayload = {
   id: string;
   title: string;
   duration: string;
+  video_url: string;
   completed: boolean;
   type: LessonType;
   position: number;
@@ -34,6 +35,7 @@ const AdminLessonCreatePage = () => {
     id: `l-${Date.now()}`,
     title: "",
     duration: "",
+    video_url: "",
     completed: false,
     type: "video",
     position: 1,
@@ -134,6 +136,15 @@ const AdminLessonCreatePage = () => {
             <div>
               <label className="text-sm font-semibold">Durée</label>
               <Input value={draft.duration} onChange={(e) => setDraft((d) => ({ ...d, duration: e.target.value }))} className="mt-2" />
+            </div>
+            <div>
+              <label className="text-sm font-semibold">Video URL / Path</label>
+              <Input
+                value={draft.video_url}
+                onChange={(e) => setDraft((d) => ({ ...d, video_url: e.target.value }))}
+                className="mt-2"
+                placeholder="ex: /videos/lesson1.mp4 ou https://..."
+              />
             </div>
             <div>
               <label className="text-sm font-semibold">Type</label>

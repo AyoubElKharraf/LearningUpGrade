@@ -17,6 +17,7 @@ export interface Lesson {
   id: string;
   title: string;
   duration: string;
+  videoUrl?: string | null;
   completed: boolean;
   type: "video" | "quiz" | "reading";
 }

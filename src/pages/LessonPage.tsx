@@ -74,7 +74,7 @@ const LessonPage = () => {
                 </div>
               ) : (
                 <div>
-                  <VideoPlayer title={lesson.title} />
+                  <VideoPlayer title={lesson.title} videoUrl={lesson.videoUrl} />
                   <h1 className="mt-5 font-display text-2xl font-bold">{lesson.title}</h1>
                   <p className="mt-2 text-muted-foreground text-pretty leading-relaxed">
                     In this lesson, we'll cover the core concepts and work through practical examples.
